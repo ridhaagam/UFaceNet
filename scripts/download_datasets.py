@@ -7,15 +7,14 @@ import argparse
 import json
 from pathlib import Path
 
-from ufacenet.data.download import download_facexformer_checkpoint, fetch_lfw, write_dataset_manifest
+from ufacenet.data.download import fetch_lfw, write_dataset_manifest
 from ufacenet.data.registry import DATASET_REGISTRY
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Prepare UFaceNet datasets and upstream assets.")
+    parser = argparse.ArgumentParser(description="Prepare UFaceNet datasets and public startup assets.")
     parser.add_argument("--manifest", default="data/manifests/datasets.json", help="Path for the dataset manifest JSON.")
     parser.add_argument("--download-lfw", action="store_true", help="Download LFW through sklearn for smoke checks.")
-    parser.add_argument("--download-facexformer-ckpt", action="store_true", help="Download upstream FaceXFormer checkpoint.")
     parser.add_argument("--blocker", default="runs/dataset_blocker.md", help="Where to write manual-access blockers.")
     return parser.parse_args()
 
@@ -50,8 +49,6 @@ def main() -> None:
     results: list[dict[str, object]] = [{"manifest": str(write_dataset_manifest(args.manifest))}]
     if args.download_lfw:
         results.append(fetch_lfw())
-    if args.download_facexformer_ckpt:
-        results.append(download_facexformer_checkpoint())
     blocker = write_blocker(args.blocker)
     results.append({"manual_access_blocker": str(blocker)})
     print(json.dumps(results, indent=2))

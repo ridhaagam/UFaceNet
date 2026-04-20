@@ -2,7 +2,7 @@
 
 ## Core Idea
 
-UFaceNet keeps the FaceXFormer premise: a shared face encoder, MLP multi-scale fusion, and a lightweight FaceX decoder that processes face tokens and task tokens together.
+UFaceNet uses an independently implemented shared face encoder, multi-scale fusion, and lightweight task-token decoder that processes face tokens and task tokens together.
 
 The extension is a first-class reconstruction/generation branch:
 
@@ -31,7 +31,7 @@ flowchart LR
 
 ## Why This Block Can Be Better
 
-FaceXFormer already uses task tokens to extract task-specific representations from a shared face representation. UFaceNet can make reconstruction useful by turning it into a consistency signal for the whole block:
+Prior unified face models use task tokens to extract task-specific representations from a shared face representation. UFaceNet can make reconstruction useful by turning it into a consistency signal for the whole block:
 
 - Landmarks constrain reconstructed geometry.
 - Head pose constrains camera and render alignment.
@@ -44,18 +44,9 @@ The desired result is not only a generated face. The desired result is a reconst
 
 ## Proposed Modules
 
-### 0. Source Migration
+### 0. Independent Source Boundary
 
-Copy the FaceXFormer pieces needed for active development into `ufacenet/`:
-
-- encoder/backbone wrapper;
-- FaceX decoder;
-- two-way transformer utilities;
-- task heads for released local tasks;
-- checkpoint compatibility loader;
-- preprocessing and output serializers.
-
-Keep `facexformer/` as the upstream reference. After migration, active runtime scripts should import from `ufacenet`, not from `facexformer`.
+All active implementation lives in `ufacenet/`. Do not vendor or import FaceXFormer code, and do not load FaceXFormer checkpoints. Published FaceXFormer values may be cited as baselines in papers and ledgers, but UFaceNet training and evaluation must use UFaceNet code.
 
 ### 1. Task Registry
 
@@ -141,7 +132,7 @@ Start simple and add terms one at a time:
 
 ```text
 L_total =
-  L_facexformer_tasks
+  L_analysis_tasks
   + lambda_rgb * L1(recon, image)
   + lambda_lpips * LPIPS(recon, image)
   + lambda_id * (1 - cos(phi_id(recon), phi_id(image)))
@@ -155,10 +146,10 @@ Use detached teacher predictions for consistency in early experiments. Allow gra
 
 ## Training Stages
 
-Stage 0: Baseline reproduction
+Stage 0: Independent baseline setup
 
-- Run local FaceXFormer inference.
-- If training code is added, reproduce paper-like task metrics on a small split or document the missing data/training release blocker.
+- Validate UFaceNet one-pass inference and training from scratch.
+- Reproduce paper-like task metrics on configured splits or document dataset/protocol blockers.
 
 Stage 1: Frozen reconstruction head
 
@@ -184,7 +175,7 @@ Stage 4: Generative refinement
 
 ## Ablations Required For ACCV
 
-- FaceXFormer baseline, no FRec.
+- UFaceNet analysis-only baseline, no FRec.
 - UFaceNet with isolated FRec decoder, no consistency block.
 - UFaceNet with reconstruction-consistency block.
 - One FRec token versus geometry/texture/render tokens.
@@ -197,7 +188,7 @@ Stage 4: Generative refinement
 
 ## Main Figure Plan
 
-Figure A: FaceXFormer baseline block and UFaceNet inserted block.
+Figure A: UFaceNet analysis-only block and UFaceNet with FRec block.
 
 Figure B: reconstruction outputs:
 

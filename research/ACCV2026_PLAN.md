@@ -29,7 +29,7 @@ UFaceNet: Extending Unified Facial Analysis to Face Reconstruction and Generatio
 
 Contribution 1:
 
-A unified architecture that extends FaceXFormer-style task-token facial analysis with a first-class face reconstruction/generation task family.
+A unified architecture that extends task-token facial analysis with a first-class face reconstruction/generation task family.
 
 Contribution 2:
 
@@ -37,7 +37,7 @@ A reconstruction-consistency block that ties generated/reconstructed outputs to 
 
 Contribution 3:
 
-A benchmark packet for unified face analysis plus reconstruction, reporting original FaceXFormer task metrics together with rFID, FID-face, identity preservation, geometry error, task consistency, runtime, and ablations.
+A benchmark packet for unified face analysis plus reconstruction, reporting original analysis-task metrics together with rFID, FID-face, identity preservation, geometry error, task consistency, runtime, and ablations.
 
 Contribution 4:
 
@@ -47,7 +47,7 @@ A practical analysis of the tradeoff between unified analysis performance, recon
 
 1. Introduction
    - Unified face analysis has matured, but reconstruction/generation remains outside the shared tokenized block.
-   - FaceXFormer shows task-token unification for ten facial analysis tasks.
+   - Prior unified face analysis work shows task-token unification for facial analysis tasks.
    - UFaceNet asks whether reconstruction/generation can become a first-class task token without degrading the original tasks.
 
 2. Related Work
@@ -58,7 +58,7 @@ A practical analysis of the tradeoff between unified analysis performance, recon
    - Evaluation metrics: FID, rFID, identity consistency, geometry benchmarks.
 
 3. Method
-   - FaceXFormer recap.
+   - Prior unified task-token analysis recap.
    - UFaceNet task registry.
    - FRec token and optional geometry/texture/render tokens.
    - Reconstruction-consistency block.
@@ -83,7 +83,7 @@ A practical analysis of the tradeoff between unified analysis performance, recon
 
 ## Required Figures
 
-Figure 1: Task coverage matrix showing UFaceNet adds FRec to the FaceXFormer ten-task block.
+Figure 1: Task coverage matrix showing UFaceNet adds FRec to the ten-task analysis block.
 
 Figure 2: UFaceNet architecture block:
 
@@ -115,7 +115,7 @@ Figure 5: Failure cases and robustness slices.
 
 Table 1: Task coverage, using `research/TASK_MATRIX.md`.
 
-Table 2: Original ten task results versus FaceXFormer and multi-task baselines.
+Table 2: Original ten task results versus cited multi-task baselines.
 
 Table 3: Reconstruction/generation results:
 
@@ -181,7 +181,7 @@ By 2026-07-08:
 
 ## Risk Register
 
-Risk: local FaceXFormer code lacks full training release.
+Risk: full multi-task training data is not locally available.
 
 Mitigation: implement UFaceNet as a reproducible extension with explicit baseline reproduction limits and use paper metrics as external reference.
 
@@ -199,4 +199,4 @@ Mitigation: use paired 2D metrics first, add NoW/MICC when data access is comple
 
 Risk: broad task scope dilutes novelty.
 
-Mitigation: center paper on FRec token plus reconstruction-consistency block, not on reimplementing every FaceXFormer task.
+Mitigation: center paper on FRec token plus reconstruction-consistency block, with all implementation and training owned by UFaceNet.

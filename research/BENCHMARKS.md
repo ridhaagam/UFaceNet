@@ -14,7 +14,7 @@ FaceXFormer v3 evaluates ten tasks with task-specific metrics:
 - FR on LFW, CFP-FP, AgeDB, CALFW, CPLFW: 1:1 verification accuracy.
 - Vis on COFW: recall at 80 percent precision.
 
-UFaceNet must keep these metrics and add reconstruction/generation metrics.
+UFaceNet must report these metrics through its own evaluators and add reconstruction/generation metrics. Published FaceXFormer numbers may be cited as baselines, but UFaceNet does not use FaceXFormer code or checkpoints.
 
 ## New FRec Metrics
 
@@ -160,7 +160,7 @@ Rows:
 
 - specialized models from FaceXFormer paper;
 - Faceptor;
-- FaceXFormer;
+- cited FaceXFormer paper values;
 - UFaceNet without FRec training;
 - UFaceNet full.
 
@@ -185,7 +185,7 @@ Rows:
 
 - simple autoencoder baseline;
 - DECA/MICA/3DDFA-style reconstruction baseline where applicable;
-- FaceXFormer plus separate recon model;
+- UFaceNet analysis-only plus separate recon baseline;
 - UFaceNet isolated FRec decoder;
 - UFaceNet with reconstruction-consistency block;
 - UFaceNet with generative refiner.
@@ -259,7 +259,7 @@ Columns:
 
 For a first ACCV-quality internal checkpoint:
 
-1. FaceXFormer baseline inference and runtime.
+1. UFaceNet analysis-only baseline inference and runtime.
 2. UFaceNet one-pass output on a fixed validation split, including analysis tasks and FRec from the same model interface.
 3. rFID(face crops), FID-face, LPIPS, PSNR, SSIM.
 4. ArcFace ID cosine.

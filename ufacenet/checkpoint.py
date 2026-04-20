@@ -1,4 +1,4 @@
-"""Checkpoint helpers for migrated FaceXFormer and UFaceNet weights."""
+"""Checkpoint helpers for UFaceNet weights."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ def extract_state_dict(checkpoint: Any) -> dict[str, torch.Tensor]:
     """Extract a PyTorch state dict from common checkpoint layouts."""
 
     if isinstance(checkpoint, dict):
-        for key in ("state_dict", "state_dict_backbone", "model", "model_state_dict"):
+        for key in ("state_dict", "model", "model_state_dict"):
             value = checkpoint.get(key)
             if isinstance(value, dict):
                 return value
@@ -25,7 +25,7 @@ def extract_state_dict(checkpoint: Any) -> dict[str, torch.Tensor]:
 
 
 def load_checkpoint(model: nn.Module, path: str | Path, strict: bool = False) -> dict[str, list[str]]:
-    """Load UFaceNet or FaceXFormer-compatible weights and report key mismatches."""
+    """Load UFaceNet weights and report key mismatches."""
 
     checkpoint = torch.load(Path(path), map_location="cpu")
     state = extract_state_dict(checkpoint)

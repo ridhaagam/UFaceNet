@@ -61,24 +61,11 @@ Metrics:
 - FR: 1:1 verification accuracy
 - Vis: recall at 80 percent precision
 
-## What The Local Code Contains
+## Code Independence Requirement
 
-The local `facexformer/` code is not a complete training release. It contains inference code and a model implementation exposing the following output groups:
+UFaceNet must not use the FaceXFormer repository, runtime code, or checkpoints. FaceXFormer is a cited paper baseline and task/metric reference only.
 
-- parsing
-- landmarks
-- headpose
-- attributes
-- age/gender/race
-- visibility
-
-It does not currently expose expression or face recognition inference paths in `facexformer/inference.py`, even though FaceXFormer v3 discusses ten tasks. UFaceNet implementation work must bridge this gap explicitly.
-
-## Migration Requirement
-
-For UFaceNet, `facexformer/` is an upstream snapshot and baseline reference only. The active implementation should copy and adapt the required encoder, FaceX decoder, transformer utilities, checkpoint loading, preprocessing, serializers, and available heads into `ufacenet/`.
-
-New training, inference, and evaluation scripts should import from `ufacenet`. Direct imports from `facexformer` are allowed only in baseline comparison or migration-check scripts.
+Implementation work must stay in `ufacenet/`, with UFaceNet trained from scratch using its own configs, dataloaders, losses, and evaluators. If a paper comparison uses FaceXFormer values, those values must be cited and recorded in the benchmark ledger rather than produced through the upstream codebase.
 
 ## UFaceNet Opportunity
 
@@ -91,7 +78,7 @@ The paper already frames face analysis as a set of learnable task tokens. UFaceN
 
 The novelty should not be "we added another MLP." The stronger idea is a reconstruction-consistency block that uses the reconstruction path to regularize and verify the shared face representation.
 
-The FRec path should remain one-pass and token-conditioned like FaceXFormer: a single UFaceNet forward call should be able to return analysis outputs and high-fidelity reconstruction/generation outputs when the requested task set includes FRec.
+The FRec path should remain one-pass and token-conditioned: a single UFaceNet forward call should be able to return analysis outputs and high-fidelity reconstruction/generation outputs when the requested task set includes FRec.
 
 ## Paper Claim Boundary
 

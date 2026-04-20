@@ -65,7 +65,7 @@ class TinyFaceEncoder(nn.Module):
 
 
 class SwinFaceEncoder(nn.Module):
-    """Torchvision Swin-B encoder wrapper matching the FaceXFormer feature taps."""
+    """Torchvision Swin-B encoder wrapper for UFaceNet multi-scale features."""
 
     def __init__(self, pretrained: bool = False) -> None:
         super().__init__()

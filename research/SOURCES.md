@@ -6,7 +6,6 @@ Use this as the starting source ledger. Final paper writing must verify every ci
 
 - FaceXFormer v3 PDF: https://arxiv.org/pdf/2403.12960v3
 - FaceXFormer arXiv page: https://arxiv.org/abs/2403.12960
-- FaceXFormer repository: https://github.com/Kartik-3004/facexformer
 - UFaceNet target repository: https://github.com/ridhaagam/UFaceNet
 - ACCV 2026 official site: https://accv2026.org/
 - LFW: https://vis-www.cs.umass.edu/lfw/
@@ -26,7 +25,7 @@ Use this as the starting source ledger. Final paper writing must verify every ci
 
 ## Final Verification Checklist
 
-- Verify FaceXFormer table values from the final ICCV/CVF version.
+- Verify cited baseline table values from the final published versions.
 - Verify each method's task coverage from the original paper, not from secondary summaries.
 - Verify dataset licenses before training or releasing checkpoints.
 - Verify ACCV deadlines again before submission.

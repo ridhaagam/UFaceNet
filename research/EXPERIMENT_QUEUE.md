@@ -2,45 +2,43 @@
 
 Use this queue with `program.md`. Append results to `research/results.tsv`.
 
-## E000: Baseline Inventory
+## E000: Independent Baseline Inventory
 
-Hypothesis: The local repository can run FaceXFormer inference for released task groups once weights and one image are available.
+Hypothesis: The local repository can run UFaceNet one-pass inference and from-scratch FRec training without external FaceXFormer code or checkpoints.
 
 Actions:
 
 - Validate Python environment.
-- Check checkpoint path.
-- Run `facexformer/inference.py` on one image for each locally supported task.
-- Save outputs under `runs/<run_id>/baseline_inference/`.
+- Run `scripts/run_inference.py` for all UFaceNet tasks including FRec.
+- Run a short from-scratch FRec training smoke test.
+- Save outputs under `runs/<run_id>/`.
 
 Keep criteria:
 
-- At least one task inference works.
-- Missing weights or image paths are documented precisely.
+- One-pass all-task inference works.
+- Short FRec training from scratch works.
+- Missing dataset paths are documented precisely.
 
-## E000A: FaceXFormer Source Migration
+## E000A: Independence Audit
 
-Hypothesis: UFaceNet should own its active runtime code while preserving FaceXFormer provenance and checkpoint compatibility.
+Hypothesis: UFaceNet should have no runtime dependency on FaceXFormer code or checkpoints.
 
 Actions:
 
-- Create `ufacenet/`.
-- Copy and adapt required FaceXFormer modules into `ufacenet/`.
-- Add provenance comments/docstrings only where useful.
-- Add a compatibility loader for old FaceXFormer checkpoints.
-- Update scripts so new runtime imports come from `ufacenet`, not `facexformer`.
-- Add a smoke test that imports `ufacenet` without importing `facexformer`.
+- Confirm there is no tracked `facexformer/` runtime folder.
+- Confirm scripts and tests import from `ufacenet`.
+- Confirm no FaceXFormer checkpoint download path exists.
+- Add a smoke test that imports `ufacenet` without importing external FaceXFormer code.
 
 Keep criteria:
 
-- Existing baseline path is still documented.
 - UFaceNet forward pass can be tested from `ufacenet`.
-- No new training/evaluation script depends on `facexformer` imports.
+- No training/evaluation script depends on FaceXFormer imports or checkpoints.
 - Obvious unused imports, dead code, and stale comments are removed.
 
 ## E000B: One-Pass FRec Output Contract
 
-Hypothesis: UFaceNet can expose analysis and FRec outputs through one FaceXFormer-style task-token interface.
+Hypothesis: UFaceNet can expose analysis and FRec outputs through one unified task-token interface.
 
 Actions:
 
@@ -71,13 +69,13 @@ Keep criteria:
 
 ## E002: FRec Token Instantiation
 
-Hypothesis: The model can add an FRec token while preserving old checkpoint loading via non-strict or migration-aware loading.
+Hypothesis: The model can add an FRec token while remaining trainable from scratch.
 
 Actions:
 
 - Add `T_frec`.
 - Add config flag `enable_frec`.
-- Ensure old checkpoint still loads for old tasks.
+- Ensure training starts without any external checkpoint.
 - Verify forward pass shape with random input.
 
 Metrics:
@@ -93,11 +91,11 @@ Keep criteria:
 
 ## E003: Frozen RGB Reconstruction Decoder
 
-Hypothesis: A frozen migrated UFaceNet encoder/FaceX decoder plus a small RGB decoder can reconstruct aligned face crops enough to establish a baseline.
+Hypothesis: A frozen UFaceNet encoder/task decoder plus a small RGB decoder can reconstruct aligned face crops enough to establish a baseline.
 
 Actions:
 
-- Freeze migrated backbone and FaceX modules inside `ufacenet/`.
+- Freeze UFaceNet backbone and task decoder modules.
 - Train FRec decoder on aligned face crops.
 - Save paired reconstruction grids.
 
@@ -145,7 +143,7 @@ Hypothesis: Landmark and pose consistency improve geometric faithfulness.
 
 Actions:
 
-- Use frozen or detached UFaceNet predictions, with FaceXFormer baseline predictions only for comparison when available.
+- Use frozen or detached UFaceNet predictions.
 - Add consistency losses for LD and HPE.
 
 Metrics:
@@ -273,7 +271,7 @@ Hypothesis: UFaceNet can add reconstruction/generation without substantial degra
 Actions:
 
 - Run original task benchmarks or smallest valid subsets.
-- Compare FaceXFormer baseline and UFaceNet variants.
+- Compare UFaceNet analysis-only and UFaceNet FRec variants, and cite published baselines separately.
 
 Metrics:
 

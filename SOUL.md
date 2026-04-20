@@ -2,13 +2,13 @@
 
 ## Scientific Standard
 
-UFaceNet prioritizes a defensible unified model over broad but weak task claims. The project is not complete because a new head produces an image. It is complete only when the reconstruction/generation branch improves or preserves the unified face representation under controlled evaluation.
+UFaceNet prioritizes a defensible unified model over broad but weak task claims. The project is not complete because a new head produces an image. It is complete only when the from-scratch reconstruction/generation branch improves or preserves the unified face representation under controlled evaluation.
 
 ### Claims Must Be Earned
 
 - Do not claim "first" unless the literature review explicitly supports it.
 - Do not claim "better" from one metric. UFaceNet must report task metrics, reconstruction fidelity, face realism, identity preservation, geometry quality, fairness, and runtime.
-- Do not hide regressions on the original FaceXFormer tasks.
+- Do not hide regressions on the original analysis tasks.
 - Do not use generated samples as proof without paired quantitative metrics.
 - Negative results must be logged. A failed branch can still define the final method.
 
@@ -22,11 +22,11 @@ UFaceNet prioritizes a defensible unified model over broad but weak task claims.
 
 ## UFaceNet Thesis
 
-FaceXFormer shows that heterogeneous face analysis tasks can be represented as learnable task tokens inside a lightweight FaceX decoder. UFaceNet tests whether reconstruction/generation can become another first-class tokenized output and whether that output can improve the shared face representation through reconstruction consistency.
+Prior unified face analysis work shows that heterogeneous face tasks can be represented as learnable task tokens. UFaceNet independently tests whether reconstruction/generation can become another first-class tokenized output and whether that output can improve the shared face representation through reconstruction consistency.
 
 The core research question:
 
-Can a unified face model perform FaceXFormer-style analysis and produce faithful face reconstruction/generation outputs without sacrificing real-time usability or degrading the original ten tasks?
+Can an independently trained unified face model perform broad facial analysis and produce faithful face reconstruction/generation outputs without sacrificing real-time usability or degrading the original ten analysis tasks?
 
 ## Reproducibility Rules
 
@@ -35,14 +35,13 @@ Can a unified face model perform FaceXFormer-style analysis and produce faithful
 - Keep one variable per ablation whenever practical.
 - Save outputs under `runs/<run_id>/`.
 - Save generated face grids, paired reconstructions, metric JSON, and logs for every run.
-- Preserve the original FaceXFormer metrics as regression tests.
+- Preserve the original ten task metrics as regression tests.
 - Every proof, claim, benchmark/table value, figure value, and removal must have a ledger entry before publication or push to `https://github.com/ridhaagam/UFaceNet`.
 
 ## Engineering Standard
 
 - Local execution remains first-class.
-- The released FaceXFormer code is inference-only; do not pretend it is a full training release.
-- Treat `facexformer/` as a read-only upstream snapshot. Active UFaceNet code must live in the main package after migration.
+- Do not vendor, import, adapt, or load FaceXFormer code or checkpoints. UFaceNet is an independent implementation trained from scratch.
 - Any training code added for UFaceNet must be config-driven and resumable.
 - Dataset paths must be explicit and license-aware.
 - Benchmarks must fail loudly when a required split, checkpoint, detector, or evaluator is missing.
@@ -61,7 +60,7 @@ Can a unified face model perform FaceXFormer-style analysis and produce faithful
 
 ## One-Pass Unified Output
 
-UFaceNet must preserve the FaceXFormer interaction model: a single model with task tokens should produce the requested outputs in one forward path. FRec may use a high-fidelity decoder or optional refiner, but it must be conditioned by the UFaceNet shared representation and task tokens, not implemented as an unrelated external generator.
+UFaceNet must preserve the unified interaction model: a single model with task tokens should produce the requested outputs in one forward path. FRec may use a high-fidelity decoder or optional refiner, but it must be conditioned by the UFaceNet shared representation and task tokens, not implemented as an unrelated external generator.
 
 For a full UFaceNet call, the model should be able to return:
 
@@ -81,9 +80,9 @@ For a full UFaceNet call, the model should be able to return:
 
 Do not stop after creating a head, passing a smoke test, or getting a nice image. Continue until the following are true:
 
-1. Original FaceXFormer task baselines are reproduced or the blocker is documented.
+1. Original ten-task baselines are reproduced or the blocker is documented.
 2. UFaceNet reconstruction/generation produces saved outputs.
 3. rFID, FID-face, LPIPS, identity cosine, and at least one geometry metric run.
-4. A task regression table compares FaceXFormer and UFaceNet.
+4. A task regression table compares cited baselines and UFaceNet.
 5. Ablations isolate the reconstruction token, reconstruction consistency block, loss terms, and decoder choice.
 6. The ACCV paper outline has tables and figures mapped to completed or queued experiments.

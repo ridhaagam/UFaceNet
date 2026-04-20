@@ -19,7 +19,7 @@ from ufacenet.checkpoint import load_checkpoint
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run UFaceNet one-pass inference.")
     parser.add_argument("--image", help="Input image path. If omitted, uses random smoke input.")
-    parser.add_argument("--checkpoint", help="Optional UFaceNet or compatible FaceXFormer checkpoint.")
+    parser.add_argument("--checkpoint", help="Optional UFaceNet checkpoint.")
     parser.add_argument("--tasks", default="all", help="Comma-separated tasks or alias: all, analysis, frec, local.")
     parser.add_argument("--output-dir", default="runs/inference", help="Output directory.")
     parser.add_argument("--image-size", type=int, default=224, help="Input and FRec output size.")

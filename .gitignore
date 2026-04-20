@@ -9,8 +9,7 @@ venv/
 build/
 dist/
 
-# Nested upstream snapshots are committed as files, not nested repositories.
-facexformer/.git/
+# Nested helper repositories should never be committed as git metadata.
 autoresearch/.git/
 
 # Runtime artifacts.

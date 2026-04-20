@@ -5,7 +5,7 @@ import torch
 from ufacenet import UFaceNet, UFaceNetConfig
 
 
-def test_ufacenet_import_does_not_import_facexformer():
+def test_ufacenet_import_does_not_import_external_baseline():
     assert "facexformer" not in sys.modules
 
 

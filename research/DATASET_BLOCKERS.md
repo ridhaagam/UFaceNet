@@ -6,18 +6,16 @@ Canonical repo: https://github.com/ridhaagam/UFaceNet
 
 - LFW through sklearn: `data/raw/lfw_home`
 - LFW funneled FRec training split: `data/processed/aligned_faces/train`
-- FaceXFormer upstream checkpoint: `checkpoints/facexformer/ckpts/model.pt`
-
 These files are intentionally not tracked by git because datasets and checkpoints are large. Recreate them with:
 
 ```bash
-python scripts/download_datasets.py --download-lfw --download-facexformer-ckpt
+python scripts/download_datasets.py --download-lfw
 python scripts/prepare_lfw_frec.py --max-images 512
 ```
 
 ## Manual Access Required
 
-The following are required for full FaceXFormer/UFaceNet paper-grade training or evaluation, but require licenses, requests, or manual terms acceptance:
+The following are required for full UFaceNet paper-grade training or evaluation, but require licenses, requests, or manual terms acceptance:
 
 | Dataset | Expected Path | Tasks | Source | Blocker |
 |---|---|---|---|---|

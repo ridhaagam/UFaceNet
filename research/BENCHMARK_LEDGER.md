@@ -47,7 +47,7 @@ id: BENCH-0001
 date: 2026-04-20
 status: planned
 run_id: pending
-variant: FaceXFormer upstream baseline
+variant: cited FaceXFormer paper baseline
 task_or_table: original task regression baseline
 dataset_split: pending dataset registry
 metric: FP F1, LD NME, HPE MAE, Attr accuracy, Age MAE, Gen accuracy, Race accuracy, Vis recall@80P, Exp accuracy, FR verification
@@ -58,7 +58,7 @@ command: pending
 config: pending
 checkpoint: pending
 artifact_dir: runs/<run_id>/
-protocol_notes: baseline must be documented even if local upstream inference release lacks all ten task groups
+protocol_notes: cited baseline values must be source-verified and not produced by upstream FaceXFormer code
 removal_or_supersedes: NA
 owner: future implementation agent
 notes: If a task cannot run, log blocker instead of leaving blank.
@@ -182,4 +182,28 @@ protocol_notes: smoke-only feature model, not Inception FID or paper rFID
 removal_or_supersedes: NA
 owner: Codex
 notes: Use only to verify evaluator plumbing.
+```
+
+### BENCH-0007
+
+```text
+id: BENCH-0007
+date: 2026-04-20
+status: valid
+run_id: inference_independent_smoke
+variant: UFaceNet tiny random weights independent implementation
+task_or_table: one-pass output contract after FaceXFormer removal
+dataset_split: random tensor
+metric: output shape validation
+value: pass
+direction: pass/fail
+sample_count: 1
+command: python scripts/run_inference.py --tasks all --image-size 64 --output-dir runs/inference_independent_smoke --refiner
+config: inline UFaceNetConfig image_size=64 backbone=tiny refiner=true
+checkpoint: none
+artifact_dir: runs/inference_independent_smoke/
+protocol_notes: verifies all analysis outputs and FRec outputs after removing FaceXFormer runtime/checkpoint paths
+removal_or_supersedes: REM-0002, REM-0003
+owner: Codex
+notes: Not a paper metric.
 ```

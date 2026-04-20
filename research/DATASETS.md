@@ -2,7 +2,7 @@
 
 This file defines the intended dataset registry. Do not hard-code these paths in training or benchmark code.
 
-## FaceXFormer Tasks
+## UFaceNet Analysis Tasks
 
 | Task | Train | Test | Metric |
 |---|---|---|---|

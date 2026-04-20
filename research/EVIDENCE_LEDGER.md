@@ -43,7 +43,7 @@ source_or_run: https://arxiv.org/pdf/2403.12960v3
 files: research/FACEXFORMER_V3_NOTES.md, research/TASK_MATRIX.md
 verification_command: manual PDF review
 scope: paper framing and task matrix
-limitations: local facexformer code exposes fewer inference task groups than the v3 paper describes
+limitations: this is a paper-source claim only and does not imply UFaceNet uses FaceXFormer code
 owner: Codex
 notes: FR means face recognition. UFaceNet uses FRec for face reconstruction/generation.
 ```
@@ -54,7 +54,7 @@ notes: FR means face recognition. UFaceNet uses FRec for face reconstruction/gen
 id: EVID-0002
 date: 2026-04-20
 status: planned
-claim: UFaceNet adds a first-class FRec output family to the FaceXFormer-style tokenized model.
+claim: UFaceNet adds a first-class FRec output family to an independent tokenized unified face model.
 evidence_type: architecture plan
 source_or_run: research/UFACENET_ARCHITECTURE.md
 files: README.md, CLAUDE.md, program.md
@@ -88,7 +88,7 @@ notes: Do not claim that docs were pushed unless a git push succeeds.
 id: EVID-0004
 date: 2026-04-20
 status: verified
-claim: The active UFaceNet package can run a one-pass request for all analysis tasks plus FRec without importing the upstream facexformer package.
+claim: The active UFaceNet package can run a one-pass request for all analysis tasks plus FRec without importing external FaceXFormer code.
 evidence_type: local smoke tests
 source_or_run: pytest and runs/inference_smoke/report.json
 files: ufacenet/, scripts/run_inference.py, ufacenet/tests/test_model.py
@@ -105,13 +105,30 @@ notes: This verifies interface and output shapes, not benchmark accuracy.
 id: EVID-0005
 date: 2026-04-20
 status: verified
-claim: License-safe startup assets are available locally: LFW smoke data and the upstream FaceXFormer checkpoint.
+claim: License-safe startup assets are available locally for FRec smoke training with LFW.
 evidence_type: local download
-source_or_run: data/raw/lfw_home, data/processed/aligned_faces/train, checkpoints/facexformer/ckpts/model.pt
+source_or_run: data/raw/lfw_home, data/processed/aligned_faces/train
 files: scripts/download_datasets.py, scripts/prepare_lfw_frec.py, runs/dataset_report_after_download.json
-verification_command: python scripts/download_datasets.py --download-lfw --download-facexformer-ckpt; python scripts/prepare_lfw_frec.py --max-images 512; python scripts/validate_datasets.py --output runs/dataset_report_after_download.json
+verification_command: python scripts/download_datasets.py --download-lfw; python scripts/prepare_lfw_frec.py --max-images 512; python scripts/validate_datasets.py --output runs/dataset_report_after_download.json
 scope: training startup readiness
 limitations: restricted datasets still require manual license/access steps
 owner: Codex
-notes: LFW is a smoke/verification set, not the full FaceXFormer multi-task training corpus.
+notes: LFW is a smoke/verification set, not the full UFaceNet multi-task training corpus.
+```
+
+### EVID-0006
+
+```text
+id: EVID-0006
+date: 2026-04-20
+status: verified
+claim: UFaceNet no longer tracks or uses a local FaceXFormer runtime folder or checkpoint download path.
+evidence_type: local git and smoke validation
+source_or_run: git status, runs/inference_independent_smoke/report.json
+files: README.md, CLAUDE.md, scripts/download_datasets.py, ufacenet/data/download.py, research/REMOVAL_LOG.md
+verification_command: find . -maxdepth 2 -type d -name facexformer; git ls-files facexformer; python -m pytest -q; python scripts/run_inference.py --tasks all --image-size 64 --output-dir runs/inference_independent_smoke --refiner
+scope: independence policy
+limitations: FaceXFormer remains cited in literature/benchmark docs only
+owner: Codex
+notes: Local ignored FaceXFormer checkpoint files were removed from the workspace.
 ```

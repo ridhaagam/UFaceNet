@@ -22,15 +22,11 @@ To start a new run:
    - `research/EVIDENCE_LEDGER.md`
    - `research/BENCHMARK_LEDGER.md`
    - `research/REMOVAL_LOG.md`
-   - `facexformer/network/models/facexformer.py`
-   - `facexformer/network/models/transformer.py`
-   - `facexformer/inference.py`
 4. Verify assets:
-   - FaceXFormer checkpoint path, if available.
    - At least one test image.
    - Dataset roots for any benchmark being run.
    - CUDA availability if training or full inference is planned.
-5. Verify that active runtime imports are planned for `ufacenet/`, not `facexformer/`.
+5. Verify that all active runtime imports come from `ufacenet/`.
 6. Initialize or append to `research/results.tsv`.
 7. Record the run hypothesis in `runs/<tag>/hypothesis.md`.
 
@@ -40,7 +36,7 @@ If the root is not a git repository, use `run_id` and file checksums instead of 
 
 Optimize for a publishable UFaceNet result:
 
-- Preserve the ten-task FaceXFormer promise.
+- Preserve the ten-task unified face analysis promise.
 - Add a new FRec output family for face reconstruction/generation.
 - Make FRec callable in the same one-pass task-token model path as the analysis tasks.
 - Show that the new block is not cosmetic by reporting reconstruction metrics, face-specific generative metrics, original task regressions, and efficiency.
@@ -56,7 +52,7 @@ The primary target is not a single best metric. The target is a defensible Paret
 ## What You Can Modify
 
 - Add UFaceNet runtime code in `ufacenet/`.
-- Copy and adapt required FaceXFormer modules into `ufacenet/` with clear provenance.
+- Implement architecture, training, and evaluation independently from scratch.
 - Add task registries, configs, evaluators, dataloaders, and scripts.
 - Add reconstruction/generation heads.
 - Add high-fidelity FRec modules: RGB decoder, geometry/depth/normal outputs, identity-preserving losses, perceptual losses, and optional VAE/VQ/diffusion-compatible refiner interface.
@@ -67,9 +63,9 @@ The primary target is not a single best metric. The target is a defensible Paret
 
 ## What You Must Not Do
 
-- Do not rewrite FaceXFormer baselines without preserving a reproducible baseline path.
-- Do not make new runtime code depend on imports from `facexformer/`.
-- Do not edit `facexformer/` except for an explicit, user-requested upstream patch.
+- Do not vendor, import, adapt, or load FaceXFormer code or checkpoints.
+- Do not recreate a local `facexformer/` runtime folder.
+- Do not compare against baselines without citing the source and documenting the protocol.
 - Do not implement FRec as a separate unrelated generator that bypasses UFaceNet tokens/features.
 - Do not change benchmark splits after seeing results.
 - Do not drop original task metrics.
@@ -82,7 +78,7 @@ The primary target is not a single best metric. The target is a defensible Paret
 
 - Research code must be reproducible, readable, and inspectable.
 - Public modules, classes, and scripts need concise purpose docstrings.
-- Comments are allowed when they explain shape contracts, benchmark protocol, migration constraints, numerical stability, or non-obvious design decisions.
+- Comments are allowed when they explain shape contracts, benchmark protocol, numerical stability, or non-obvious design decisions.
 - Prefer explicit names and small functions over explanatory comments.
 - Every script should have `--help`, clear defaults, and useful errors for missing assets.
 - Before marking work complete, run a dead-code/import check where practical and remove obvious unused material.
@@ -132,7 +128,7 @@ Use `NA` when a metric was not applicable. Use `blocked:<reason>` when a metric 
 Keep a change when:
 
 - rFID or FID-face improves and identity/geometry does not regress materially.
-- Original FaceXFormer tasks stay within the declared regression budget.
+- Original analysis tasks stay within the declared regression budget.
 - Runtime and parameter overhead remain defensible for a unified model.
 - The change simplifies the system while preserving metrics.
 

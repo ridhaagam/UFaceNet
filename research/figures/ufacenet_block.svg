@@ -16,7 +16,7 @@
   </defs>
 
   <rect x="0" y="0" width="1400" height="720" fill="#f7f9fb"/>
-  <text x="48" y="58" class="title">UFaceNet Block: FaceXFormer + Face Reconstruction/Generation</text>
+  <text x="48" y="58" class="title">UFaceNet Block: Unified Analysis + Face Reconstruction/Generation</text>
   <text x="50" y="88" class="subtitle">FRec is a new task family. FR remains face recognition.</text>
 
   <rect x="50" y="150" width="165" height="100" rx="8" fill="#dff2ea" stroke="#396f5a" stroke-width="2"/>

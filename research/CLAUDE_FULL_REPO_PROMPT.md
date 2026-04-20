@@ -5,7 +5,7 @@ Copy this prompt into Claude from `/home/dsic/Documents/agam/ufacenet`.
 ```text
 You are working in /home/dsic/Documents/agam/ufacenet.
 
-Your job is to turn this workspace into a full UFaceNet research repo based on FaceXFormer, with one unified model that keeps FaceXFormer-style facial analysis and adds high-fidelity face reconstruction/generation as a first-class output.
+Your job is to turn this workspace into a full independent UFaceNet research repo, with one unified model that performs facial analysis and adds high-fidelity face reconstruction/generation as a first-class output.
 
 Canonical publication repository: https://github.com/ridhaagam/UFaceNet
 
@@ -24,15 +24,12 @@ First read these files in order:
 10. research/EVIDENCE_LEDGER.md
 11. research/BENCHMARK_LEDGER.md
 12. research/REMOVAL_LOG.md
-13. facexformer/network/models/facexformer.py
-14. facexformer/network/models/transformer.py
-15. facexformer/inference.py
 
 Core objective:
-Build UFaceNet: a FaceXFormer-based unified facial model with the original FaceXFormer task-token idea plus a new FRec task family for face reconstruction/generation. FR means Face Recognition. The new task must be called FRec, not FR.
+Build UFaceNet: an independently implemented unified facial model with task tokens plus a new FRec task family for face reconstruction/generation. FR means Face Recognition. The new task must be called FRec, not FR.
 
-Critical migration requirement:
-Do not use facexformer/ as the active runtime package. Treat facexformer/ as a read-only upstream snapshot and baseline reference. Copy and adapt all FaceXFormer pieces needed for UFaceNet into the main project package under ufacenet/. New scripts, tests, training code, inference code, and evaluators must import from ufacenet, not from facexformer. Direct imports from facexformer are allowed only in migration or baseline comparison scripts.
+Critical independence requirement:
+Do not use facexformer/ as an active runtime package, reference snapshot, checkpoint source, or code source. Do not recreate a local facexformer/ folder. UFaceNet must be implemented under ufacenet/ and trained from scratch. FaceXFormer may be cited as a paper baseline only.
 
 Evidence and benchmark documentation requirement:
 Every proof, claim, benchmark, table value, figure metric, leaderboard value, and removal must be documented before it is used in the README, paper, figures, or pushed to GitHub. Use these ledgers:
@@ -43,7 +40,7 @@ Every proof, claim, benchmark, table value, figure metric, leaderboard value, an
 Do not silently delete weak or failed results. Mark them failed, invalid, superseded, removed, or rejected with a reason and replacement.
 
 One-pass requirement:
-UFaceNet must behave like a FaceXFormer-style unified task-token model. One model invocation should be able to request all tasks and return analysis outputs plus FRec outputs. Do not implement face generation as a separate unrelated pipeline. The high-fidelity reconstruction/generation path must be conditioned by UFaceNet shared features and FRec/task tokens.
+UFaceNet must behave like a unified task-token model. One model invocation should be able to request all tasks and return analysis outputs plus FRec outputs. Do not implement face generation as a separate unrelated pipeline. The high-fidelity reconstruction/generation path must be conditioned by UFaceNet shared features and FRec/task tokens.
 
 The final repo should support:
 - Face parsing
@@ -59,19 +56,13 @@ The final repo should support:
 - High-fidelity face reconstruction/generation via FRec
 
 Important reality check:
-The local facexformer code is an inference release and may not expose all ten FaceXFormer v3 tasks. Do not pretend it does. Preserve the existing local behavior as a documented baseline, then create the extensible UFaceNet code needed to support the full task set.
+FaceXFormer is a cited baseline paper, not a code dependency. Create the extensible UFaceNet code needed to support the full task set.
 
 Implementation requirements:
-1. Do not destroy or rewrite the original facexformer folder.
-2. Create the active UFaceNet code in ufacenet/.
-3. Copy/adapt required FaceXFormer code into ufacenet/:
-   - encoder/backbone wrapper
-   - FaceX decoder
-   - two-way transformer utilities
-   - task heads for released local tasks
-   - preprocessing and serializers
-   - checkpoint compatibility loader
-4. Make all new runtime scripts import from ufacenet.
+1. Create or refine the active UFaceNet code in ufacenet/.
+2. Do not vendor, import, adapt, or load FaceXFormer code or checkpoints.
+3. Implement UFaceNet's own encoder/backbone wrapper, task-token decoder, reconstruction branch, task heads, preprocessing, serializers, and checkpoints.
+4. Make all runtime scripts import from ufacenet.
 5. Add a task registry so task ids, names, heads, losses, metrics, serializers, and datasets are not hard-coded everywhere.
 6. Add FRec tokens:
    - Start with T_frec.
@@ -93,9 +84,9 @@ Implementation requirements:
    - Geometry path: depth/normal/mesh or 3DMM-compatible outputs if feasible.
    - Optional/refiner path: VAE/VQ/diffusion-compatible conditioned generator interface.
    - If pretrained generation weights are unavailable, build the interface, config, smoke test, and blocker docs.
-10. Preserve old checkpoint loading:
-   - Existing FaceXFormer checkpoints should load for old tasks through a migration-aware compatibility loader.
-   - New FRec weights may initialize randomly.
+10. Preserve UFaceNet checkpoint loading:
+   - UFaceNet checkpoints should load through the project checkpoint helper.
+   - New branches may initialize randomly when training from scratch.
    - Use explicit warnings for missing new keys and unexpected old keys.
 
 Repository structure to create or complete:
@@ -133,7 +124,7 @@ Code quality standard:
 - No commented-out experiments or dead code.
 - No stale TODOs without a precise blocker file.
 - No comments that simply restate obvious code.
-- Comments should explain why a constraint exists, how a shape convention works, numerical stability, checkpoint migration, or benchmark protocol.
+- Comments should explain why a constraint exists, how a shape convention works, numerical stability, checkpoint loading, or benchmark protocol.
 - Public modules/classes/functions need concise docstrings.
 - Scripts need argparse help text and useful errors.
 - Remove unused imports, unused functions, unused classes, unused configs, and dead branches before completion.
@@ -152,7 +143,7 @@ Metrics that must be implemented or stubbed with precise blockers:
 - parsing consistency
 - expression consistency when labels/model exist
 - NoW/MICC/AFLW2000-3D geometry metrics when data is available
-- original FaceXFormer task deltas
+- original analysis task deltas
 - FPS and parameter count
 
 Evaluation rules:
@@ -173,19 +164,19 @@ The FRec branch should be designed to produce publication-grade face outputs, no
 5. optional generative refiner conditioned on UFaceNet tokens
 
 Training stages to encode:
-- Stage 0: baseline FaceXFormer behavior validator
+- Stage 0: UFaceNet analysis-only and one-pass behavior validator
 - Stage 1: frozen FRec reconstruction decoder
 - Stage 2: reconstruction-consistency losses
 - Stage 3: partial joint fine-tuning
 - Stage 4: optional high-fidelity generative refiner
 
 Smoke tests:
-- ufacenet imports without importing facexformer
+- ufacenet imports without importing external FaceXFormer code
 - model instantiates
 - task registry resolves all task names
 - FRec enabled and disabled modes both work
 - one forward call can request all analysis tasks and FRec
-- old FaceXFormer checkpoint compatibility path is present and tested with a dummy state dict
+- UFaceNet checkpoint save/load path is tested with a dummy state dict
 - forward pass on random tensor works
 - reconstruction decoder returns image-shaped output
 - optional geometry outputs have documented shapes when enabled
@@ -193,7 +184,7 @@ Smoke tests:
 - scripts print useful errors for missing datasets/checkpoints
 
 Documentation updates:
-- Update README.md with setup, repo structure, commands, migration policy, one-pass output policy, and current blockers.
+- Update README.md with setup, repo structure, commands, independence policy, one-pass output policy, and current blockers.
 - Update research/EXPERIMENT_QUEUE.md with what was completed and what remains.
 - Update research/results.tsv with any actual smoke runs.
 - Update research/EVIDENCE_LEDGER.md for every proof, claim, source-backed statement, and paper assertion.

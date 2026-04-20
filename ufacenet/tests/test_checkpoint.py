@@ -14,9 +14,9 @@ def test_checkpoint_roundtrip(tmp_path: Path):
     assert report["unexpected_keys"] == []
 
 
-def test_dummy_facexformer_layout_loads_non_strict(tmp_path: Path):
+def test_empty_checkpoint_layout_reports_missing_keys(tmp_path: Path):
     model = UFaceNet(UFaceNetConfig(image_size=64, backbone="tiny"))
     path = tmp_path / "legacy.pt"
-    torch.save({"state_dict_backbone": {}}, path)
+    torch.save({"state_dict": {}}, path)
     report = load_checkpoint(model, path, strict=False)
     assert report["missing_keys"]

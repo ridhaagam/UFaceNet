@@ -55,15 +55,33 @@ notes: Do not use FR for reconstruction in code, docs, or figures.
 ```text
 id: REM-0002
 date: 2026-04-20
-status: deprecated
-item: Direct runtime imports from facexformer/
+status: removed
+item: FaceXFormer code and checkpoint dependency
 item_type: code path
 previous_location: facexformer/
-new_location: ufacenet/
-reason: user requested FaceXFormer code copied into the main project so active work does not depend on the upstream folder
+new_location: ufacenet/ independent implementation
+reason: user requested UFaceNet to be fully our own and trained from scratch rather than using FaceXFormer code or checkpoints
 evidence_or_benchmark_id: EVID-0003
-replacement: migrated UFaceNet package under ufacenet/
-impact: facexformer/ remains read-only provenance and baseline reference only
+replacement: independent UFaceNet package under ufacenet/
+impact: FaceXFormer remains a cited baseline paper only
 owner: Codex
-notes: Baseline or migration scripts may inspect facexformer/ but new runtime code must import ufacenet.
+notes: Do not recreate facexformer/ or checkpoint-download paths.
+```
+
+### REM-0003
+
+```text
+id: REM-0003
+date: 2026-04-20
+status: removed
+item: FaceXFormer checkpoint downloader
+item_type: script feature
+previous_location: scripts/download_datasets.py and ufacenet/data/download.py
+new_location: NA
+reason: UFaceNet will train from scratch and must not load FaceXFormer checkpoints
+evidence_or_benchmark_id: EVID-0003
+replacement: UFaceNet checkpoints produced by scripts/train_frec.py and future multi-task training scripts
+impact: dataset downloader now prepares datasets only
+owner: Codex
+notes: Local ignored checkpoint files may exist from earlier setup but are not committed or used.
 ```

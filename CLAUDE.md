@@ -3,8 +3,7 @@
 ## Project Identity
 
 - Name: UFaceNet
-- Goal: Extend FaceXFormer into a unified face analysis plus face reconstruction/generation model.
-- Upstream reference: `facexformer/`
+- Goal: Build an independent unified face analysis plus face reconstruction/generation model trained from scratch.
 - Active package target: `ufacenet/`
 - Research control files: `SOUL.md`, `program.md`, and `research/*.md`
 - Target venue framing: ACCV 2026
@@ -12,29 +11,26 @@
 
 ## Current Repository Reality
 
-- `facexformer/` contains the official-style FaceXFormer inference release.
-- The local model code currently exposes parsing, landmarks, head pose, attributes, age/gender/race, and visibility inference groups.
-- The FaceXFormer v3 paper describes ten tasks, adding facial expression recognition and face recognition.
-- UFaceNet must not assume the local code already implements all ten paper tasks.
+- FaceXFormer v3 is a cited baseline paper only.
+- UFaceNet must not vendor, import, adapt, or load FaceXFormer code or checkpoints.
+- The active implementation lives in `ufacenet/` and is trained from scratch.
 - The original `autoresearch/` project is a language-model experiment loop. Use its autonomous loop style, not its model code or metric.
 
-## Migration Policy
+## Independence Policy
 
-- Copy and adapt the FaceXFormer model pieces needed for UFaceNet into `ufacenet/`.
-- Treat `facexformer/` as read-only provenance and baseline reference.
-- New scripts, tests, training code, and evaluators must import from `ufacenet`, not from `facexformer`.
-- Compatibility scripts may read `facexformer/` only to validate baseline behavior or migrate checkpoint keys.
-- Preserve original FaceXFormer checkpoint loading through an explicit migration or compatibility loader.
-- Do not modify `facexformer/` unless the user explicitly asks to patch the upstream snapshot.
+- Do not recreate a local `facexformer/` runtime folder.
+- Do not add FaceXFormer checkpoint download or compatibility paths.
+- Do not import from FaceXFormer code in scripts, tests, training, or evaluation.
+- Paper comparisons should cite published baselines and reproduce metrics through UFaceNet's own evaluators.
 
 ## Primary Research Target
 
-Add an eleventh output family to the FaceXFormer task-token design:
+Add an eleventh output family to UFaceNet's task-token design:
 
 - Existing paper tasks: FP, LD, HPE, Attr, Age, Gen, Race, Vis, Exp, FR
 - New UFaceNet task: FRec, meaning face reconstruction/generation
 
-Do not call the new task `FR`, because `FR` already means face recognition in the FaceXFormer paper.
+Do not call the new task `FR`, because `FR` already means face recognition in the task matrix.
 
 The FRec output must be available in the same unified forward path as the analysis tasks. It can include high-fidelity reconstruction/generation modules, but those modules must be conditioned by UFaceNet tokens/features and callable as part of one model invocation.
 
@@ -50,8 +46,6 @@ Read these files before architecture or benchmark changes:
 6. `research/EVIDENCE_LEDGER.md`
 7. `research/BENCHMARK_LEDGER.md`
 8. `research/REMOVAL_LOG.md`
-9. `facexformer/network/models/facexformer.py`
-10. `facexformer/network/models/transformer.py`
 
 ## Operating Mode
 
@@ -63,10 +57,10 @@ Read these files before architecture or benchmark changes:
 
 ## Implementation Order
 
-1. Reproduce or document local FaceXFormer baseline behavior from the upstream snapshot, if weights and images are available.
-2. Create the `ufacenet/` package and migrate the needed FaceXFormer encoder, FaceX decoder, transformer utilities, task heads, preprocessing, serializers, and inference adapters into it.
-3. Add a task registry so task ids, names, outputs, losses, and metrics are not hard-coded in multiple files.
-4. Add UFaceNet reconstruction tokens without breaking old checkpoint loading.
+1. Keep all active runtime code in `ufacenet/`.
+2. Add or refine the task registry so task ids, names, outputs, losses, and metrics are not hard-coded in multiple files.
+3. Train UFaceNet from scratch with balanced multi-task sampling.
+4. Add or refine UFaceNet reconstruction tokens without loading external FaceXFormer weights.
 5. Add a reconstruction/generation head behind a config flag.
 6. Add a high-fidelity FRec path with RGB reconstruction, optional geometry outputs, and an optional VAE/VQ/diffusion-compatible refiner interface.
 7. Add paired reconstruction output saving.
@@ -83,7 +77,7 @@ Read these files before architecture or benchmark changes:
 - Every benchmark result, table value, figure metric, or leaderboard comparison must be added to `research/BENCHMARK_LEDGER.md`.
 - Every removed, deprecated, renamed, superseded, or intentionally excluded item must be added to `research/REMOVAL_LOG.md`.
 - Keep changes if they improve the primary reconstruction metrics without unacceptable degradation on original tasks.
-- Discard or isolate changes that improve rFID by damaging identity, geometry, or original FaceXFormer tasks.
+- Discard or isolate changes that improve rFID by damaging identity, geometry, or original analysis tasks.
 
 ## GitHub Documentation Policy
 
@@ -108,7 +102,7 @@ For reconstruction/generation:
 - expression consistency when expression labels are available
 - NoW or MICC geometry error when 3D ground truth is available
 
-For original tasks, keep the FaceXFormer paper metrics:
+For original analysis tasks, keep the published benchmark metrics:
 
 - FP: mean F1 on CelebAMask-HQ
 - LD: NME on 300W
@@ -125,7 +119,7 @@ Do not stop at the first working run. Stop only when all required items are comp
 
 1. Environment validation exists.
 2. Dataset validation exists.
-3. FaceXFormer baseline has a reproducible command.
+3. Published baseline references and UFaceNet evaluation commands are documented.
 4. UFaceNet reconstruction/generation inference produces files.
 5. rFID and FID-face evaluators run or have precise blockers.
 6. Original task regression metrics are run or have precise blockers.

@@ -1,4 +1,4 @@
-"""Two-way transformer blocks migrated from the FaceXFormer decoder path."""
+"""Two-way transformer blocks for UFaceNet task-token decoding."""
 
 from __future__ import annotations
 

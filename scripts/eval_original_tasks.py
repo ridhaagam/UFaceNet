@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Record current status of original FaceXFormer task evaluations."""
+"""Record current status of original UFaceNet analysis-task evaluations."""
 
 from __future__ import annotations
 
