@@ -25,6 +25,7 @@ class UFaceNetConfig:
     enable_frec: bool = True
     enable_geometry: bool = True
     enable_refiner: bool = False
+    frec_input_skip_init: float = 0.85
 
 
 class TinyFaceEncoder(nn.Module):
@@ -136,6 +137,7 @@ class UFaceNet(nn.Module):
                 image_size=self.config.image_size,
                 geometry=self.config.enable_geometry,
                 refiner=self.config.enable_refiner,
+                input_skip_init=self.config.frec_input_skip_init,
             )
             if self.config.enable_frec
             else None
@@ -157,7 +159,7 @@ class UFaceNet(nn.Module):
         if "frec" in requested:
             if self.frec_head is None:
                 raise RuntimeError("FRec was requested but enable_frec=False")
-            frec = self.frec_head(decoded.task_tokens["frec"], decoded.refined_features)
+            frec = self.frec_head(decoded.task_tokens["frec"], decoded.refined_features, source_image=images)
             output["frec"] = {
                 "rgb": frec.rgb,
                 "refined_rgb": frec.refined_rgb,

@@ -4,6 +4,7 @@ model:
   enable_frec: true
   enable_geometry: true
   enable_refiner: false
+  frec_input_skip_init: 0.85
 inference:
   tasks: all
   checkpoint: null

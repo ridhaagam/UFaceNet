@@ -21,6 +21,9 @@ def test_one_pass_all_tasks_with_frec():
     assert output["frec"]["rgb"].shape == (1, 3, 64, 64)
     assert output["frec"]["refined_rgb"].shape == (1, 3, 64, 64)
     assert output["frec"]["depth"].shape == (1, 1, 64, 64)
+    assert float(output["frec"]["rgb"].std()) > 0.05
+    assert float(output["frec"]["depth"].std()) > 0.05
+    assert float(output["frec"]["mask"].std()) > 0.05
 
 
 def test_frec_disabled_raises_when_requested():

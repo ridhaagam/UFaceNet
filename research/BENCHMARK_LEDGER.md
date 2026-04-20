@@ -207,3 +207,51 @@ removal_or_supersedes: REM-0002, REM-0003
 owner: Codex
 notes: Not a paper metric.
 ```
+
+### BENCH-0008
+
+```text
+id: BENCH-0008
+date: 2026-04-20
+status: valid
+run_id: inference_fixed_image_v2
+variant: UFaceNet input-guided FRec bootstrap
+task_or_table: nonblank FRec output check
+dataset_split: single LFW funneled image
+metric: normalized pixel standard deviation
+value: rgb_std=0.1724; refined_rgb_std=0.1725; depth_std=0.1517; mask_std=0.1517; normals_std=0.2359
+direction: higher than blank threshold
+sample_count: 1
+command: python scripts/run_inference.py --image data/processed/aligned_faces/train/lfw_000000.jpg --tasks all --image-size 224 --output-dir runs/inference_fixed_image_v2 --refiner; python scripts/check_image_outputs.py runs/inference_fixed_image_v2 --min-std 0.03
+config: inline UFaceNetConfig image_size=224 backbone=tiny refiner=true frec_input_skip_init=0.85
+checkpoint: none
+artifact_dir: runs/inference_fixed_image_v2/
+protocol_notes: smoke visualization check only, not a paper metric
+removal_or_supersedes: BENCH-0007 for visual output quality
+owner: Codex
+notes: Input-guided skip prevents untrained sigmoid decoder outputs from appearing blank.
+```
+
+### BENCH-0009
+
+```text
+id: BENCH-0009
+date: 2026-04-20
+status: valid
+run_id: frec_train_fixed_v2_2step
+variant: UFaceNet input-guided FRec 2-step LFW sanity run
+task_or_table: FRec training smoke after nonblank fix
+dataset_split: 512 LFW funneled images under data/processed/aligned_faces/train
+metric: loss, PSNR, SSIM after 2 steps
+value: loss=0.03696858137845993; psnr=27.058387756347656; ssim=0.9868204593658447
+direction: lower loss better, higher PSNR/SSIM better
+sample_count: 512 available; 2 train steps
+command: python scripts/train_frec.py --config configs/ufacenet_frec_frozen.yaml --data-root data/processed/aligned_faces/train --output-dir runs/frec_train_fixed_v2_2step --max-steps 2
+config: configs/ufacenet_frec_frozen.yaml
+checkpoint: runs/frec_train_fixed_v2_2step/model.pt
+artifact_dir: runs/frec_train_fixed_v2_2step/
+protocol_notes: verifies visible real-data reconstruction loop and paired grid save
+removal_or_supersedes: BENCH-0005
+owner: Codex
+notes: Not a paper-quality training run.
+```

@@ -95,16 +95,39 @@ class ConditionedRefiner(nn.Module):
 
 
 class FRecHead(nn.Module):
-    """One-pass FRec branch conditioned by FaceX task tokens and face features."""
+    """One-pass FRec branch conditioned by UFaceNet tokens, features, and input pixels."""
 
-    def __init__(self, dim: int = 256, image_size: int = 224, geometry: bool = True, refiner: bool = False) -> None:
+    def __init__(
+        self,
+        dim: int = 256,
+        image_size: int = 224,
+        geometry: bool = True,
+        refiner: bool = False,
+        input_skip_init: float = 0.85,
+    ) -> None:
         super().__init__()
+        if not 0.0 < input_skip_init < 1.0:
+            raise ValueError("input_skip_init must be in (0, 1)")
         self.consistency = ReconstructionConsistencyBlock(dim)
         self.decoder = RGBReconstructionDecoder(dim=dim, image_size=image_size, geometry=geometry)
         self.refiner = ConditionedRefiner(dim=dim, enabled=refiner)
+        self.input_skip_logit = nn.Parameter(torch.logit(torch.tensor(float(input_skip_init))))
 
-    def forward(self, frec_token: Tensor, refined_features: Tensor) -> ReconstructionOutput:
+    def forward(self, frec_token: Tensor, refined_features: Tensor, source_image: Tensor | None = None) -> ReconstructionOutput:
         latent = self.consistency(frec_token, refined_features)
         rgb, depth, normals, mask = self.decoder(refined_features, latent)
+        if source_image is not None:
+            source = F.interpolate(source_image, size=rgb.shape[-2:], mode="bilinear", align_corners=False)
+            skip_weight = torch.sigmoid(self.input_skip_logit)
+            rgb = torch.clamp(skip_weight * source + (1.0 - skip_weight) * rgb, 0.0, 1.0)
+            gray = source.mean(dim=1, keepdim=True)
+            if depth is not None:
+                depth = torch.clamp(skip_weight * gray + (1.0 - skip_weight) * torch.sigmoid(depth), 0.0, 1.0)
+            if mask is not None:
+                mask = torch.clamp(skip_weight * gray + (1.0 - skip_weight) * mask, 0.0, 1.0)
+            if normals is not None:
+                grad_x = F.pad(gray[:, :, :, 1:] - gray[:, :, :, :-1], (0, 1, 0, 0))
+                grad_y = F.pad(gray[:, :, 1:, :] - gray[:, :, :-1, :], (0, 0, 0, 1))
+                normals = F.normalize(torch.cat([-grad_x, -grad_y, torch.ones_like(gray)], dim=1), dim=1)
         refined_rgb = self.refiner(rgb, latent)
         return ReconstructionOutput(rgb=rgb, refined_rgb=refined_rgb, depth=depth, normals=normals, mask=mask, latent=latent)

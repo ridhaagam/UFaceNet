@@ -52,6 +52,7 @@ python scripts/validate_datasets.py
 python -m pytest -q
 python scripts/run_inference.py --tasks all --image-size 64 --refiner
 python scripts/train_frec.py --config configs/ufacenet_frec_frozen.yaml --data-root data/processed/aligned_faces/train --max-steps 2
+python scripts/check_image_outputs.py runs/inference_fixed_image_v2 runs/frec_train_fixed_v2_2step --min-std 0.03
 ```
 
 For full FRec training, increase `training.max_steps` in `configs/ufacenet_frec_frozen.yaml` or pass a larger `--max-steps` value after the dataset paths are confirmed.

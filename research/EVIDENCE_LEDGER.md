@@ -132,3 +132,20 @@ limitations: FaceXFormer remains cited in literature/benchmark docs only
 owner: Codex
 notes: Local ignored FaceXFormer checkpoint files were removed from the workspace.
 ```
+
+### EVID-0007
+
+```text
+id: EVID-0007
+date: 2026-04-20
+status: verified
+claim: FRec smoke images are no longer blank after adding the input-guided reconstruction skip and geometry bootstrap.
+evidence_type: local image-output validation
+source_or_run: runs/inference_fixed_image_v2 and runs/frec_train_fixed_v2_2step
+files: ufacenet/reconstruction.py, scripts/check_image_outputs.py, scripts/run_inference.py, scripts/train_frec.py
+verification_command: python scripts/check_image_outputs.py runs/inference_fixed_image_v2 runs/frec_train_fixed_v2_2step --min-std 0.03
+scope: visual smoke reliability
+limitations: validates nonblank output and reconstruction plumbing, not paper-quality fidelity
+owner: Codex
+notes: The input skip is trainable and initialized to preserve visible image structure during from-scratch startup.
+```

@@ -3,3 +3,5 @@ inference_smoke	2026-04-20	ufacenet_tiny_all_tasks	keep	model_interface	random_t
 frec_train_lfw_2step	2026-04-20	ufacenet_tiny_frec	keep	frec_training	LFW_funneled_512	NA	NA	NA	NA	NA	NA	NA	NA	NA	2-step real-data FRec training loop saved checkpoint and sample
 reconstruction_eval_lfw_2step	2026-04-20	ufacenet_tiny_frec_eval	keep	reconstruction_metric_smoke	LFW_funneled_512_vs_1_sample	NA	0.652437	NA	NA	NA	NA	NA	NA	NA	color_moments_smoke Frechet score not paper FID
 inference_independent_smoke	2026-04-20	ufacenet_tiny_all_tasks_independent	keep	independence_policy	random_tensor	NA	NA	NA	NA	NA	NA	NA	NA	NA	one-pass all tasks plus FRec after removing FaceXFormer runtime and checkpoint paths
+inference_fixed_image_v2	2026-04-20	ufacenet_input_guided_frec	keep	nonblank_visual_output	LFW_single_image	NA	NA	NA	NA	NA	NA	NA	NA	NA	FRec rgb depth mask normals pass nonblank std threshold
+frec_train_fixed_v2_2step	2026-04-20	ufacenet_input_guided_frec_train	keep	frec_training	LFW_funneled_512	NA	NA	NA	NA	NA	NA	NA	NA	NA	2-step training gives visible paired reconstruction grid loss 0.03697 psnr 27.06 ssim 0.9868

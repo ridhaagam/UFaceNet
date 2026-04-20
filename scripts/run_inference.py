@@ -25,6 +25,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--image-size", type=int, default=224, help="Input and FRec output size.")
     parser.add_argument("--backbone", choices=["tiny", "swin_b"], default="tiny", help="Backbone to instantiate.")
     parser.add_argument("--refiner", action="store_true", help="Enable the lightweight high-fidelity refiner interface.")
+    parser.add_argument("--frec-input-skip", type=float, default=0.85, help="Initial input skip blend for FRec reconstruction.")
     return parser.parse_args()
 
 
@@ -49,7 +50,12 @@ def main() -> None:
     args = parse_args()
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    config = UFaceNetConfig(image_size=args.image_size, backbone=args.backbone, enable_refiner=args.refiner)
+    config = UFaceNetConfig(
+        image_size=args.image_size,
+        backbone=args.backbone,
+        enable_refiner=args.refiner,
+        frec_input_skip_init=args.frec_input_skip,
+    )
     model = UFaceNet(config).eval()
     load_report = None
     if args.checkpoint:
@@ -59,15 +65,18 @@ def main() -> None:
     with torch.no_grad():
         outputs = model(image, tasks=args.tasks)
 
+    save_image(image, output_dir / "input.png")
     frec = outputs.get("frec")
     if isinstance(frec, dict):
         save_image(frec["rgb"], output_dir / "frec_rgb.png")
         if frec.get("refined_rgb") is not None:
             save_image(frec["refined_rgb"], output_dir / "frec_refined_rgb.png")
         if frec.get("depth") is not None:
-            save_image(torch.sigmoid(frec["depth"]), output_dir / "frec_depth.png")
+            save_image(frec["depth"], output_dir / "frec_depth.png")
         if frec.get("mask") is not None:
             save_image(frec["mask"], output_dir / "frec_mask.png")
+        if frec.get("normals") is not None:
+            save_image((frec["normals"] + 1.0) * 0.5, output_dir / "frec_normals.png")
 
     report = {"outputs": tensor_shapes(outputs), "checkpoint": load_report}
     (output_dir / "report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

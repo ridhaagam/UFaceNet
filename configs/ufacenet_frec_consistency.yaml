@@ -4,6 +4,7 @@ model:
   enable_frec: true
   enable_geometry: true
   enable_refiner: true
+  frec_input_skip_init: 0.85
 data:
   train_root: data/processed/aligned_faces/train
 training:

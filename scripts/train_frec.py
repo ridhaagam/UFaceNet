@@ -9,7 +9,7 @@ from pathlib import Path
 
 import torch
 from torch.utils.data import DataLoader
-from torchvision.utils import save_image
+from torchvision.utils import make_grid, save_image
 import yaml
 
 from ufacenet import UFaceNet, UFaceNetConfig
@@ -52,6 +52,7 @@ def main() -> None:
             backbone=str(model_cfg.get("backbone", "tiny")),
             enable_geometry=bool(model_cfg.get("enable_geometry", True)),
             enable_refiner=bool(model_cfg.get("enable_refiner", False)),
+            frec_input_skip_init=float(model_cfg.get("frec_input_skip_init", 0.85)),
         )
     ).to(device)
     if bool(train_cfg.get("freeze_non_frec", True)):
@@ -108,7 +109,11 @@ def main() -> None:
     with torch.no_grad():
         sample = batches[0].to(device) if args.smoke else images.detach()
         sample_out = model(sample, tasks="frec")["frec"]["rgb"].detach().cpu()
+    sample_cpu = sample.detach().cpu()
+    save_image(sample_cpu, output_dir / "sample_input.png")
     save_image(sample_out, output_dir / "sample_reconstruction.png")
+    paired = torch.stack([sample_cpu, sample_out], dim=1).flatten(0, 1)
+    save_image(make_grid(paired, nrow=2), output_dir / "sample_input_reconstruction_grid.png")
     save_checkpoint(model, output_dir / "model.pt", metadata={"config": cfg, "smoke": args.smoke})
     (output_dir / "metrics.json").write_text(json.dumps(metrics, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(metrics[-1], indent=2))
