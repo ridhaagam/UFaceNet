@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="720" viewBox="0 0 1400 720">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#1d2733"/>
+    </marker>
+    <style>
+      .title { font: 700 30px Arial, sans-serif; fill: #111820; }
+      .subtitle { font: 500 17px Arial, sans-serif; fill: #394452; }
+      .boxTitle { font: 700 18px Arial, sans-serif; fill: #111820; }
+      .boxText { font: 500 14px Arial, sans-serif; fill: #223041; }
+      .smallText { font: 500 13px Arial, sans-serif; fill: #223041; }
+      .metric { font: 700 14px Arial, sans-serif; fill: #0f2a3d; }
+      .line { stroke: #1d2733; stroke-width: 2.4; fill: none; marker-end: url(#arrow); }
+      .softLine { stroke: #506174; stroke-width: 2; fill: none; marker-end: url(#arrow); stroke-dasharray: 7 7; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1400" height="720" fill="#f7f9fb"/>
+  <text x="48" y="58" class="title">UFaceNet Block: FaceXFormer + Face Reconstruction/Generation</text>
+  <text x="50" y="88" class="subtitle">FRec is a new task family. FR remains face recognition.</text>
+
+  <rect x="50" y="150" width="165" height="100" rx="8" fill="#dff2ea" stroke="#396f5a" stroke-width="2"/>
+  <text x="78" y="185" class="boxTitle">Aligned Face</text>
+  <text x="78" y="212" class="boxText">224 or 256 crop</text>
+
+  <rect x="270" y="135" width="190" height="130" rx="8" fill="#e7eefb" stroke="#3f5f94" stroke-width="2"/>
+  <text x="300" y="170" class="boxTitle">Multi-Scale</text>
+  <text x="315" y="195" class="boxTitle">Encoder</text>
+  <text x="300" y="222" class="boxText">Swin / ViT features</text>
+  <text x="300" y="246" class="boxText">hierarchical maps</text>
+
+  <rect x="515" y="135" width="175" height="130" rx="8" fill="#e7eefb" stroke="#3f5f94" stroke-width="2"/>
+  <text x="548" y="172" class="boxTitle">MLP Fusion</text>
+  <text x="548" y="204" class="boxText">shared face</text>
+  <text x="548" y="228" class="boxText">representation</text>
+
+  <rect x="745" y="120" width="230" height="160" rx="8" fill="#fff0d8" stroke="#966c24" stroke-width="2"/>
+  <text x="805" y="155" class="boxTitle">FaceX Decoder</text>
+  <text x="775" y="187" class="boxText">task self-attention</text>
+  <text x="775" y="211" class="boxText">task-to-face attention</text>
+  <text x="775" y="235" class="boxText">face-to-task attention</text>
+  <text x="775" y="259" class="boxText">2-layer lightweight core</text>
+
+  <rect x="745" y="330" width="230" height="104" rx="8" fill="#f9e5ef" stroke="#864c67" stroke-width="2"/>
+  <text x="785" y="363" class="boxTitle">Task Tokens</text>
+  <text x="768" y="392" class="boxText">FP LD HPE Attr Age</text>
+  <text x="768" y="416" class="boxText">Gen Race Vis Exp FR FRec</text>
+
+  <rect x="1035" y="80" width="260" height="170" rx="8" fill="#e9f6ff" stroke="#336a8c" stroke-width="2"/>
+  <text x="1082" y="116" class="boxTitle">Original Heads</text>
+  <text x="1065" y="149" class="boxText">parsing landmarks pose</text>
+  <text x="1065" y="173" class="boxText">attributes age gender race</text>
+  <text x="1065" y="197" class="boxText">visibility expression</text>
+  <text x="1065" y="221" class="boxText">face recognition</text>
+
+  <rect x="1035" y="310" width="260" height="155" rx="8" fill="#eadfff" stroke="#5b4692" stroke-width="2"/>
+  <text x="1060" y="346" class="boxTitle">Reconstruction-</text>
+  <text x="1060" y="371" class="boxTitle">Consistency Block</text>
+  <text x="1065" y="404" class="boxText">uses FRec token plus</text>
+  <text x="1065" y="428" class="boxText">identity geometry parsing</text>
+  <text x="1065" y="452" class="boxText">landmark pose expression cues</text>
+
+  <rect x="1035" y="525" width="260" height="120" rx="8" fill="#dff2ea" stroke="#396f5a" stroke-width="2"/>
+  <text x="1080" y="560" class="boxTitle">Recon/Gen Decoder</text>
+  <text x="1065" y="594" class="boxText">RGB face depth normal</text>
+  <text x="1065" y="618" class="boxText">mesh UV texture albedo</text>
+
+  <rect x="322" y="502" width="600" height="105" rx="8" fill="#ffffff" stroke="#6d7885" stroke-width="2"/>
+  <text x="350" y="536" class="boxTitle">Evaluation Gate</text>
+  <text x="350" y="568" class="metric">rFID face crops</text>
+  <text x="505" y="568" class="metric">FID-face</text>
+  <text x="612" y="568" class="metric">ArcFID</text>
+  <text x="700" y="568" class="metric">LPIPS</text>
+  <text x="782" y="568" class="metric">ID cosine</text>
+  <text x="350" y="592" class="metric">NoW/MICC geometry</text>
+  <text x="535" y="592" class="metric">task deltas</text>
+  <text x="650" y="592" class="metric">FPS</text>
+  <text x="715" y="592" class="metric">params</text>
+
+  <path class="line" d="M215 200 H270"/>
+  <path class="line" d="M460 200 H515"/>
+  <path class="line" d="M690 200 H745"/>
+  <path class="line" d="M860 330 V280"/>
+  <path class="line" d="M975 170 H1035"/>
+  <path class="line" d="M975 230 C1008 260 1006 320 1035 360"/>
+  <path class="line" d="M1165 465 V525"/>
+  <path class="softLine" d="M1165 250 V310"/>
+  <path class="softLine" d="M1035 585 H922"/>
+  <path class="softLine" d="M745 555 H690"/>
+
+  <text x="998" y="292" class="smallText">FRec path</text>
+  <text x="1178" y="292" class="smallText">task consistency</text>
+  <text x="959" y="612" class="smallText">metrics</text>
+</svg>

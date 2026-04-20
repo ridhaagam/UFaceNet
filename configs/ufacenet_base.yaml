@@ -1,0 +1,11 @@
+model:
+  image_size: 224
+  backbone: tiny
+  enable_frec: true
+  enable_geometry: true
+  enable_refiner: false
+inference:
+  tasks: all
+  checkpoint: null
+outputs:
+  root: runs/ufacenet_base

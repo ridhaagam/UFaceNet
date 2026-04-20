@@ -1,0 +1,23 @@
+[project]
+name = "ufacenet"
+version = "0.1.0"
+description = "Unified facial analysis and high-fidelity face reconstruction research scaffold"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "huggingface-hub>=0.20",
+    "numpy>=1.23",
+    "opencv-python>=4.8",
+    "pillow>=9.0",
+    "pyyaml>=6.0",
+    "scipy>=1.8",
+    "torch>=2.0",
+    "torchvision>=0.15",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["ufacenet/tests"]
+pythonpath = ["."]

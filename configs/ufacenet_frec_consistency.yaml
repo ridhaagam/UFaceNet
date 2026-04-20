@@ -1,0 +1,23 @@
+model:
+  image_size: 224
+  backbone: tiny
+  enable_frec: true
+  enable_geometry: true
+  enable_refiner: true
+data:
+  train_root: data/processed/aligned_faces/train
+training:
+  freeze_non_frec: false
+  batch_size: 4
+  max_steps: 3000
+  lr: 0.00005
+  weight_decay: 0.0001
+losses:
+  rgb_l1: 1.0
+  total_variation: 0.01
+  identity: 0.1
+  landmark: 0.1
+  pose: 0.05
+  parsing: 0.05
+outputs:
+  root: runs/frec_consistency

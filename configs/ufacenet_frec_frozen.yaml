@@ -1,0 +1,16 @@
+model:
+  image_size: 224
+  backbone: tiny
+  enable_frec: true
+  enable_geometry: true
+  enable_refiner: false
+data:
+  train_root: data/processed/aligned_faces/train
+training:
+  freeze_non_frec: true
+  batch_size: 4
+  max_steps: 1000
+  lr: 0.0001
+  weight_decay: 0.0001
+outputs:
+  root: runs/frec_frozen

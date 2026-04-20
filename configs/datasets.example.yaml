@@ -1,0 +1,31 @@
+datasets:
+  celeba_mask_hq:
+    root: data/raw/CelebAMask-HQ
+    access: manual_license
+  300w:
+    root: data/raw/300W
+    access: manual_license
+  biwi:
+    root: data/raw/BIWI
+    access: manual_license
+  celeba:
+    root: data/raw/CelebA
+    access: manual_or_torchvision
+  fairface:
+    root: data/raw/FairFace
+    access: manual_license
+  raf_db:
+    root: data/raw/RAF-DB
+    access: manual_license
+  affectnet:
+    root: data/raw/AffectNet
+    access: manual_license
+  ms1mv3:
+    root: data/raw/MS1MV3
+    access: manual_license
+  lfw:
+    root: data/raw/lfw_home
+    access: public_sklearn
+  now:
+    root: data/raw/NoW
+    access: manual_license
