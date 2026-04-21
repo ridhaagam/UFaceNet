@@ -34,6 +34,13 @@ Evidence rule: every proof, claim, benchmark result, table value, figure value, 
 
 The repo contains an active `ufacenet/` package with a one-pass task-token model, FRec reconstruction outputs, geometry outputs, a lightweight high-fidelity refiner interface, metrics, configs, scripts, and tests.
 
+This does not yet mean the repo is fully paper-ready. The current state is:
+
+- implemented: model scaffold, task registry, smoke-safe FRec training loop, validators, configs, and sanity tests
+- not yet implemented: full supervised multi-task training for all analysis tasks, paper-grade FRec training losses, 3D supervision, and final benchmark protocol runners
+
+The earlier LFW reconstruction runs were smoke tests only. They were useful for proving that the FRec path produced nonblank outputs, but they are not research-standard reconstruction results and should not be treated as such.
+
 License-safe assets prepared locally:
 
 - LFW downloaded through sklearn under `data/raw/lfw_home`.
@@ -41,6 +48,7 @@ License-safe assets prepared locally:
 
 Large datasets and checkpoints are ignored by git. The expected paths and manual access blockers are documented under `runs/dataset_blocker.md` and `runs/dataset_validation_blocker_after_download.md`.
 The committed blocker summary is [research/DATASET_BLOCKERS.md](research/DATASET_BLOCKERS.md).
+The full dataset acquisition table is [research/DATASETS.md](research/DATASETS.md).
 
 ## Quick Commands
 
